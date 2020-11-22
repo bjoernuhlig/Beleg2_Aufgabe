@@ -25,7 +25,9 @@ class EntityResolution (sc:SparkContext, dat1:String, dat2:String, stopwordsFile
      * getTokens soll die Funktion tokenize auf das gesamte RDD anwenden
      * und aus allen Produktdaten eines RDDs die Tokens extrahieren.
      */
-    ???
+
+    data map { case (key, productDescription ) => (key,EntityResolution.tokenize(productDescription,Utils.getStopWords("src/main/resources/stopwords.txt")) )}
+
   }
   
   def countTokens(data:RDD[(String,List[String])]):Long={
@@ -122,7 +124,10 @@ object EntityResolution{
    	* und entfernt dabei alle Stopwords.
    	* Verwenden Sie zum Aufsplitten die Methode Utils.tokenizeString
    	*/
-     ???
+
+    Utils.tokenizeString(s)
+      .diff(stopws.toList)
+
    }
 
   def getTermFrequencies(tokens:List[String]):Map[String,Double]={
