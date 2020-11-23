@@ -26,7 +26,7 @@ class EntityResolution (sc:SparkContext, dat1:String, dat2:String, stopwordsFile
      * und aus allen Produktdaten eines RDDs die Tokens extrahieren.
      */
 
-    data map { case (key, productDescription ) => (key,EntityResolution.tokenize(productDescription,Utils.getStopWords("src/main/resources/stopwords.txt")) )}
+    data map { case (key, productDescription ) => (key,EntityResolution.tokenize(productDescription,stopWords) )}
 
   }
   
@@ -125,8 +125,8 @@ object EntityResolution{
    	* Verwenden Sie zum Aufsplitten die Methode Utils.tokenizeString
    	*/
 
-    Utils.tokenizeString(s)
-      .diff(stopws.toList)
+    Utils.tokenizeString(s) // list.diff(list) removes only the first occurence of an object. filterNot with set removes all occurences of the set in the list
+      .filterNot(stopws)
 
    }
 
