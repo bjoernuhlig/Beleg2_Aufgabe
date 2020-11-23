@@ -19,8 +19,8 @@ See Chapter 3 (pp. 73-103) of [Mining Massive Datasets](http://infolab.stanford.
 
 #### Entity Resolution
 Implement functions in: `src/main/scala/textanalyse/EntityResolution.scala`
-- [x] tokenize  
-- [x] getTokens
+- [x] [tokenize](./src/main/scala/textanalyse/EntityResolution.scala#L123) 
+- [x] getTokens 
 
 Implement TF-IDF 
 - [ ] getTermFrequencies
