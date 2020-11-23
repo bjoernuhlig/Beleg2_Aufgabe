@@ -25,8 +25,8 @@ class EntityResolution (sc:SparkContext, dat1:String, dat2:String, stopwordsFile
      * getTokens soll die Funktion tokenize auf das gesamte RDD anwenden
      * und aus allen Produktdaten eines RDDs die Tokens extrahieren.
      */
-
-    data map { case (key, productDescription ) => (key,EntityResolution.tokenize(productDescription,stopWords) )}
+    val sw = stopWords // params cannot be passed directly => not serializable
+    data.map({ case (key, productDescription ) => (key, EntityResolution.tokenize(productDescription,sw) )})
 
   }
   

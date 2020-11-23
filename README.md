@@ -13,6 +13,17 @@ Combine two essentially connected fields:
 - (A) duplicate recognition using entity resolution
 - (B) data reduction using min hashing algorithm 
 
+### Avoid Not Serializable Errors
+
+- function params cannot be passed directly: 
+```Scala
+import Utils.tokenize
+def myFunc(s:String,param:Any) = { Utils.tokenize(s,param) } // does not work
+
+def myFunc(s:String,param:Any) = { val mp = param; Utils.tokenize(s,mp) } // does work
+```
+ => not serializable
+
 ### Task A: Create basic functions for textanalysis and entity resolution 
 See Chapter 3 (pp. 73-103) of [Mining Massive Datasets](http://infolab.stanford.edu/~ullman/mmds/book.pdf) for min hashing and local sensitivity hashing.
 
