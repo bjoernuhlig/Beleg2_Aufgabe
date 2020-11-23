@@ -37,7 +37,7 @@ Implement functions in: `src/main/scala/textanalyse/EntityResolution.scala`
 - [x] [findBiggestRecord](./src/main/scala/textanalyse/EntityResolution.scala#L43)
 - [ ] calculateTF_IDF
 - [ ] computeSimilarity
-- [ ] calculateDotProduct
+- [ ] [calculateDotProduct](./src/main/scala/textanalyse/EntityResolution.scala#L163)
 - [ ] calculateNorm
 - [ ] calculateCosinusSimilarity
 - [ ] calculateDocumentSimilarity
