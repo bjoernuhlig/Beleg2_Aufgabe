@@ -163,9 +163,9 @@ object EntityResolution{
   def calculateDotProduct(v1:Map[String,Double], v2:Map[String,Double]):Double={
     
     /*
-     * Berechnung des Dot-Products von zwei Vectoren
+     * Berechnung des Dot-Products von zwei Vectoren - use keyset to remove sparse elements without corresponding keys
      */
-    ???
+    (v1.filterKeys(v2.keySet) zip v2.filterKeys(v1.keySet) ) map {case ((_,u),(_,v)) => u*v} sum
   }
 
   def calculateNorm(vec:Map[String,Double]):Double={
