@@ -36,8 +36,8 @@ class EntityResolution (sc:SparkContext, dat1:String, dat2:String, stopwordsFile
      * Zählt alle Tokens innerhalb eines RDDs
      * Duplikate sollen dabei nicht eliminiert werden
      */
-    
-    ???
+
+    data.map{ case (key,tokenlist) => (key, tokenlist.length) }.fold("",0)((acc,head)=>{ ("", acc._2 + head._2) })._2
   }
   
   def findBiggestRecord(data:RDD[(String,List[String])]):(String,List[String])={
@@ -45,7 +45,7 @@ class EntityResolution (sc:SparkContext, dat1:String, dat2:String, stopwordsFile
     /*
      * Findet den Datensatz mit den meisten Tokens
      */
-    ???
+    data map { case (key:String,tokenList:List[String]) => (key,tokenList) } reduce ((acc,head) => { if (acc._2.length >= head._2.length) acc else head } )
   }
   def createCorpus={
     
@@ -137,7 +137,7 @@ object EntityResolution{
      * Menge aller Wörter innerhalb eines Dokuments 
      */
     
-    ???
+    tokens.groupBy(identity).map { case (word, frequency) => (word,frequency.length.toDouble / tokens.length.toDouble) }
   }
    
   def computeSimilarity(record:((String, String),(String, String)), idfDictionary:Map[String,Double], stopWords:Set[String]):(String, String,Double)={

@@ -19,11 +19,27 @@ See Chapter 3 (pp. 73-103) of [Mining Massive Datasets](http://infolab.stanford.
 
 #### Entity Resolution
 Implement functions in: `src/main/scala/textanalyse/EntityResolution.scala`
-- [x] [tokenize](./src/main/scala/textanalyse/EntityResolution.scala#L123) 
-- [x] getTokens 
+
+- [x] [tokenize](./src/main/scala/textanalyse/EntityResolution.scala#L121) 
+- [x] [getTokens](./src/main/scala/textanalyse/EntityResolution.scala#L22) 
+- [x] [countTokens](./src/main/scala/textanalyse/EntityResolution.scala#L33) 
+- [x] [findBiggestRecord](./src/main/scala/textanalyse/EntityResolution.scala#L43)
+- [ ] calculateTF_IDF
+- [ ] computeSimilarity
+- [ ] calculateDotProduct
+- [ ] calculateNorm
+- [ ] calculateCosinusSimilarity
+- [ ] calculateDocumentSimilarity
+- [ ] computeSimilarityWithBroadcast
 
 Implement TF-IDF 
-- [ ] getTermFrequencies
+- [x] [getTermFrequencies](./src/main/scala/textanalyse/EntityResolution.scala#L133)
+- [ ] createCorpus
+- [ ] calculateIDF
+- [ ] simpleSimimilarityCalculation
+- [ ] findSimilarity
+- [ ] simpleSimimilarityCalculationWithBroadcast
+- [ ] evaluateModel
 
 ### Task B
 
