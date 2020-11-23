@@ -20,7 +20,7 @@ See Chapter 3 (pp. 73-103) of [Mining Massive Datasets](http://infolab.stanford.
 #### Entity Resolution
 Implement functions in: `src/main/scala/textanalyse/EntityResolution.scala`
 - [x] [tokenize](./src/main/scala/textanalyse/EntityResolution.scala#L121) 
-- [x] [tokenize](./src/main/scala/textanalyse/EntityResolution.scala#tokenize(s:String,)
+- [x] [tokenize](./src/main/scala/textanalyse/EntityResolution.scala#tokenize)
 - [x] getTokens 
 
 Implement TF-IDF 
