@@ -39,7 +39,7 @@ Implement functions in: `src/main/scala/textanalyse/EntityResolution.scala`
 - [ ] computeSimilarity
 - [x] [calculateDotProduct](./src/main/scala/textanalyse/EntityResolution.scala#L163)
 - [ ] calculateNorm
-- [ ] calculateCosinusSimilarity
+- [x] [calculateCosinusSimilarity](./src/main/scala/textanalyse/EntityResolution.scala#L181)
 - [ ] calculateDocumentSimilarity
 - [ ] computeSimilarityWithBroadcast
 

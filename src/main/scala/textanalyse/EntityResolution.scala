@@ -165,7 +165,7 @@ object EntityResolution{
     /*
      * Berechnung des Dot-Products von zwei Vectoren - use keyset to remove sparse elements without corresponding keys
      */
-    (v1.filterKeys(v2.keySet) zip v2.filterKeys(v1.keySet) ) map {case ((_,u),(_,v)) => u*v} sum
+    v1.filterKeys(v2.keySet).view zip v2.filterKeys(v1.keySet) map {case ((_,u),(_,v)) => u*v} sum
   }
 
   def calculateNorm(vec:Map[String,Double]):Double={
@@ -177,12 +177,19 @@ object EntityResolution{
   }
   
   def calculateCosinusSimilarity(doc1:Map[String,Double], doc2:Map[String,Double]):Double={
-    
+
     /* 
      * Berechnung der Cosinus-Similarity für zwei Vectoren
      */
-    
-    ???
+
+    val corpus = ( doc1.keys ++ doc2.keys ).toList
+    // We need a sorted (doc) map the size of the corpus which contains zeros for words missing from the corpus
+    import scala.collection.immutable.SortedMap
+    // Find missing words from corpus / fill with zeros / convert to Array to throw into a SortedMap
+    val n1:Map[String,Double] = SortedMap( (doc1.toSeq ++ corpus.diff(doc1.keys.toList)  .map( s => (s,0.0)))  .toArray:_*)
+    val n2:Map[String,Double] = SortedMap( (doc2.toSeq ++ corpus.diff(doc2.keys.toList)  .map( s => (s,0.0)))  .toArray:_*)
+
+    calculateDotProduct(n1,n2) / ( calculateNorm(n1) * calculateNorm(n2) )
   }
   
   def calculateDocumentSimilarity(doc1:String, doc2:String,idfDictionary:Map[String,Double],stopWords:Set[String]):Double={
