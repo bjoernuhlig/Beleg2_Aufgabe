@@ -54,7 +54,7 @@ class EntityResolution (sc:SparkContext, dat1:String, dat2:String, stopwordsFile
      * (amazonRDD und googleRDD), vereinigt diese und speichert das
      * Ergebnis in corpusRDD
      */
-    ???
+    corpusRDD = getTokens(googleRDD) ++ getTokens(amazonRDD)
   }
   
   
@@ -125,7 +125,7 @@ object EntityResolution{
    	* Verwenden Sie zum Aufsplitten die Methode Utils.tokenizeString
    	*/
 
-    Utils.tokenizeString(s) // list.diff(list) removes only the first occurence of an object. filterNot with set removes all occurences of the set in the list
+    Utils.tokenizeString(s) // list.diff(list) removes only the first occurrence of an object. filterNot with Set removes all elements of the Set from the list
       .filterNot(stopws)
 
    }
@@ -181,13 +181,14 @@ object EntityResolution{
     /* 
      * Berechnung der Cosinus-Similarity für zwei Vectoren
      */
-
     val corpus = ( doc1.keys ++ doc2.keys ).toList
+
     // We need a sorted (doc) map the size of the corpus which contains zeros for words missing from the corpus
     import scala.collection.immutable.SortedMap
-    // Find missing words from corpus / fill with zeros / convert to Array to throw into a SortedMap
-    val n1:Map[String,Double] = SortedMap( (doc1.toSeq ++ corpus.diff(doc1.keys.toList)  .map( s => (s,0.0)))  .toArray:_*)
-    val n2:Map[String,Double] = SortedMap( (doc2.toSeq ++ corpus.diff(doc2.keys.toList)  .map( s => (s,0.0)))  .toArray:_*)
+
+    // Find missing words from corpus / fill with zeros / convert to Array to throw into a SortedMap or TreeMap
+    val n1:Map[String,Double] = SortedMap( (doc1.toSeq ++ corpus.diff(doc1.keys.toList)  .map( s => (s,0.0)))  .toArray:_* )
+    val n2:Map[String,Double] = SortedMap( (doc2.toSeq ++ corpus.diff(doc2.keys.toList)  .map( s => (s,0.0)))  .toArray:_* )
 
     calculateDotProduct(n1,n2) / ( calculateNorm(n1) * calculateNorm(n2) )
   }

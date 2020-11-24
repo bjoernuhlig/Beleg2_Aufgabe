@@ -1,5 +1,7 @@
 import textanalyse.EntityResolution
 
+import scala.collection.immutable.SortedMap
+
 val v1:Map[String,Double] = Map(("a"-> 4), ("c"-> 5), ("b"-> 7))
 val v2:Map[String,Double] = Map(("a"-> 5), ("c"-> 2), ("e"-> 7))
 //assert(Math.abs(res-0.35805743701971)<0.000001)
@@ -14,6 +16,7 @@ val addTodoc1:List[String] = v2.keys.toList.diff(v1.keys.toList)
 val d1:Map[String,Double] = ( v1.toSeq ++ addTodoc1.map(s => (s,0.0)) ).toMap
 val d2:Map[String,Double] = ( v2.toSeq ++ addTodoc2.map(s => (s,0.0)) ).toMap
 
+d1.to(SortedMap[String,Double])
 collection.immutable.SortedMap(d1.toArray:_*)
 
 val n1 = collection.mutable.LinkedHashMap( d1.filterKeys(d2.keySet).toSeq.sortBy(_._1):_* ).toMap
