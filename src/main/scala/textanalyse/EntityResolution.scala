@@ -64,7 +64,19 @@ class EntityResolution (sc:SparkContext, dat1:String, dat2:String, stopwordsFile
      * Berechnung des IDF-Dictionaries auf Basis des erzeugten Korpus
      * Speichern des Dictionaries in die Variable idfDict
      */
-    ???
+    val CORPUS:Double = corpusRDD.count.toDouble
+    
+    val allTokens:RDD[String] = corpusRDD.flatMap { case (key,tokenList) => tokenList }
+
+    val allDocuments:RDD[List[String]] = corpusRDD.map(_._2)
+
+    idfDict = allTokens.cartesian(allDocuments).
+      filter { case (word,list) => list.contains(word) }.
+      groupBy(_._1).
+      map(e => (e._1,CORPUS/e._2.size.toDouble)).
+      collect.
+      toMap
+
   }
 
  

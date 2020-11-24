@@ -31,22 +31,29 @@ See Chapter 3 (pp. 73-103) of [Mining Massive Datasets](http://infolab.stanford.
 #### Entity Resolution
 Implement functions in: `src/main/scala/textanalyse/EntityResolution.scala`
 
-- [x] [tokenize](./src/main/scala/textanalyse/EntityResolution.scala#L121) 
+- [x] [tokenize](./src/main/scala/textanalyse/EntityResolution.scala#L133) 
 - [x] [getTokens](./src/main/scala/textanalyse/EntityResolution.scala#L22) 
 - [x] [countTokens](./src/main/scala/textanalyse/EntityResolution.scala#L33) 
 - [x] [findBiggestRecord](./src/main/scala/textanalyse/EntityResolution.scala#L43)
 - [ ] calculateTF_IDF
 - [ ] computeSimilarity
-- [x] [calculateDotProduct](./src/main/scala/textanalyse/EntityResolution.scala#L163)
+- [x] [calculateDotProduct](./src/main/scala/textanalyse/EntityResolution.scala#L175)
 - [ ] calculateNorm
-- [x] [calculateCosinusSimilarity](./src/main/scala/textanalyse/EntityResolution.scala#L181)
+- [x] [calculateCosinusSimilarity](./src/main/scala/textanalyse/EntityResolution.scala#L193)
 - [ ] calculateDocumentSimilarity
 - [ ] computeSimilarityWithBroadcast
 
 Implement TF-IDF 
-- [x] [getTermFrequencies](./src/main/scala/textanalyse/EntityResolution.scala#L133)
+```
+TFt,d is the number of occurrences of t in document d.
+DFt is the number of documents containing the term t.
+N is the total number of documents in the corpus.
+
+    Wt,d = TFt,d log (N/DFt)
+```
+- [x] [getTermFrequencies](./src/main/scala/textanalyse/EntityResolution.scala#L145)
 - [x] [createCorpus](./src/main/scala/textanalyse/EntityResolution.scala#L50)
-- [ ] calculateIDF
+- [x] [calculateIDF](./src/main/scala/textanalyse/EntityResolution.scala#L61)
 - [ ] simpleSimimilarityCalculation
 - [ ] findSimilarity
 - [ ] simpleSimimilarityCalculationWithBroadcast
