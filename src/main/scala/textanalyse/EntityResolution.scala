@@ -54,7 +54,7 @@ class EntityResolution (sc:SparkContext, dat1:String, dat2:String, stopwordsFile
      * (amazonRDD und googleRDD), vereinigt diese und speichert das
      * Ergebnis in corpusRDD
      */
-    corpusRDD = getTokens(googleRDD) ++ getTokens(amazonRDD)
+    corpusRDD = getTokens(googleRDD) ++ getTokens(amazonRDD);
   }
   
   

@@ -45,7 +45,7 @@ Implement functions in: `src/main/scala/textanalyse/EntityResolution.scala`
 
 Implement TF-IDF 
 - [x] [getTermFrequencies](./src/main/scala/textanalyse/EntityResolution.scala#L133)
-- [ ] createCorpus
+- [x] [createCorpus](./src/main/scala/textanalyse/EntityResolution.scala#L50)
 - [ ] calculateIDF
 - [ ] simpleSimimilarityCalculation
 - [ ] findSimilarity
