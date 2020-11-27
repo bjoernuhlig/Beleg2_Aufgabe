@@ -31,15 +31,15 @@ See Chapter 3 (pp. 73-103) of [Mining Massive Datasets](http://infolab.stanford.
 #### Entity Resolution
 Implement functions in: `src/main/scala/textanalyse/EntityResolution.scala`
 
-- [x] [tokenize](./src/main/scala/textanalyse/EntityResolution.scala#L133) 
+- [x] [tokenize](./src/main/scala/textanalyse/EntityResolution.scala#L153) 
 - [x] [getTokens](./src/main/scala/textanalyse/EntityResolution.scala#L22) 
 - [x] [countTokens](./src/main/scala/textanalyse/EntityResolution.scala#L33) 
 - [x] [findBiggestRecord](./src/main/scala/textanalyse/EntityResolution.scala#L43)
-- [ ] calculateTF_IDF
+- [x] [calculateTF_IDF](./src/main/scala/textanalyse/EntityResolution.scala#L185)
 - [ ] computeSimilarity
-- [x] [calculateDotProduct](./src/main/scala/textanalyse/EntityResolution.scala#L175)
-- [ ] calculateNorm
-- [x] [calculateCosinusSimilarity](./src/main/scala/textanalyse/EntityResolution.scala#L193)
+- [x] [calculateDotProduct](./src/main/scala/textanalyse/EntityResolution.scala#L195)
+- [x] [calculateNorm](./src/main/scala/textanalyse/EntityResolution.scala#L203)
+- [x] [calculateCosinusSimilarity](./src/main/scala/textanalyse/EntityResolution.scala#L211)
 - [ ] calculateDocumentSimilarity
 - [ ] computeSimilarityWithBroadcast
 
@@ -51,7 +51,7 @@ N is the total number of documents in the corpus.
 
     Wt,d = TFt,d log (N/DFt)
 ```
-- [x] [getTermFrequencies](./src/main/scala/textanalyse/EntityResolution.scala#L145)
+- [x] [getTermFrequencies](./src/main/scala/textanalyse/EntityResolution.scala#L165)
 - [x] [createCorpus](./src/main/scala/textanalyse/EntityResolution.scala#L50)
 - [x] [calculateIDF](./src/main/scala/textanalyse/EntityResolution.scala#L61)
 - [ ] simpleSimimilarityCalculation

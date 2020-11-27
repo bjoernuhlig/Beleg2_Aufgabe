@@ -1,6 +1,7 @@
 package textanalyse
 
 import org.apache.spark.rdd.RDD
+
 import org.apache.spark.SparkContext
 import org.apache.spark.broadcast.Broadcast
 
@@ -58,7 +59,7 @@ class EntityResolution (sc:SparkContext, dat1:String, dat2:String, stopwordsFile
   }
   
   
-  def calculateIDF={
+  def calculateIDF={ // takes about 4-5 minutes as cartesian is very expensive, as is distinct
     
     /*
      * Berechnung des IDF-Dictionaries auf Basis des erzeugten Korpus
@@ -70,13 +71,32 @@ class EntityResolution (sc:SparkContext, dat1:String, dat2:String, stopwordsFile
 
     val allDocuments:RDD[List[String]] = corpusRDD.map(_._2)
 
-    idfDict = allTokens.cartesian(allDocuments).
-      filter { case (word,list) => list.contains(word) }.
+    // very expensive cartesian join with distinct takes 4-5 minutes
+//    idfDict = allTokens.cartesian(allDocuments).
+//      distinct.
+//      filter { case (word,list) => list.contains(word) }.
+//      groupBy(_._1).
+//      map(e => (e._1,CORPUS/e._2.size.toDouble)).
+//      collect.
+//      toMap
+
+    // Using broadcast to join with distinct takes 1.44 minutes
+    val bc = sc.broadcast(allTokens.collect)
+
+    val joined = allDocuments.mapPartitions({ iter =>
+      val y = bc.value
+      for {
+        (x) <- iter
+      } yield (x, y)
+    }, preservesPartitioning = true)
+
+    val grouped = joined.flatMap(x => x._2.map(y => (y,x._1))).distinct
+
+    idfDict = grouped.filter { case (word,list) => list.contains(word) }.
       groupBy(_._1).
-      map(e => (e._1,CORPUS/e._2.size.toDouble)).
+      map( e => (e._1,CORPUS/e._2.size.toDouble) ).
       collect.
       toMap
-
   }
 
  
@@ -167,9 +187,9 @@ object EntityResolution{
     /* 
      * Berechnung von TF-IDF Wert für eine Liste von Wörtern
      * Ergebnis ist eine Mapm die auf jedes Wort den zugehörigen TF-IDF-Wert mapped
-     */
-    
-    ???
+     */ //TF * IDF
+    val dict = idfDictionary
+    getTermFrequencies(terms).map { case (term:String,tf:Double) => (term, tf * dict(term)) }
   }
   
   def calculateDotProduct(v1:Map[String,Double], v2:Map[String,Double]):Double={
