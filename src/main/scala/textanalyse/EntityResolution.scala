@@ -48,8 +48,8 @@ class EntityResolution (sc:SparkContext, dat1:String, dat2:String, stopwordsFile
      */
     data map { case (key:String,tokenList:List[String]) => (key,tokenList) } reduce ((acc,head) => { if (acc._2.length >= head._2.length) acc else head } )
   }
+
   def createCorpus={
-    
     /*
      * Erstellt die Tokenmenge für die Amazon und die Google-Produkte
      * (amazonRDD und googleRDD), vereinigt diese und speichert das
@@ -230,7 +230,11 @@ object EntityResolution{
     /*
      * Berechnung der Document-Similarity für ein Dokument
      */
-    ???
+    val idfDict = idfDictionary; val sWords = stopWords
+    calculateCosinusSimilarity(
+      calculateTF_IDF(tokenize(doc1,sWords),idfDict),
+      calculateTF_IDF(tokenize(doc2,sWords),idfDict)
+    )
   }
   
   def computeSimilarityWithBroadcast(record:((String, String),(String, String)),idfBroadcast:Broadcast[Map[String,Double]], stopWords:Set[String]):(String, String,Double)={
