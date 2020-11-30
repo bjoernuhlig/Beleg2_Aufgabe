@@ -134,18 +134,18 @@ class EntityResolution (sc:SparkContext, dat1:String, dat2:String, stopwordsFile
     /*
      * Berechnen Sie die folgenden Kennzahlen:
      * 
-     * Anzahl der Duplikate im Sample
-     * Durchschnittliche Consinus Similaritaet der Duplikate
-     * Durchschnittliche Consinus Similaritaet der Nicht-Duplikate
+     *LONG Anzahl der Duplikate im Sample
+     *DOUBLE Durchschnittliche Consinus Similaritaet der Duplikate
+     *DOUBLE Durchschnittliche Consinus Similaritaet der Nicht-Duplikate
      * 
      * 
      * Ergebnis-Tripel:
      * (AnzDuplikate, avgCosinus-SimilaritätDuplikate,avgCosinus-SimilaritätNicht-Duplikate)
      */
-    
-    
+
     ???
   }
+
 }
 
 object EntityResolution{
