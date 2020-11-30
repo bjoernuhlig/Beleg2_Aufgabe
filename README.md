@@ -48,13 +48,13 @@ N is the total number of documents in the corpus.
 - [x] [calculateNorm](./src/main/scala/textanalyse/EntityResolution.scala#L203)
 - [x] [calculateCosinusSimilarity](./src/main/scala/textanalyse/EntityResolution.scala#L211)
 - [x] [calculateDocumentSimilarity](./src/main/scala/textanalyse/EntityResolution.scala#L228)
-- [ ] computeSimilarityWithBroadcast
+- [x] [computeSimilarityWithBroadcast](./src/main/scala/textanalyse/EntityResolution.scala#L240)
 - [x] [getTermFrequencies](./src/main/scala/textanalyse/EntityResolution.scala#L165)
 - [x] [createCorpus](./src/main/scala/textanalyse/EntityResolution.scala#L52)
 - [x] [calculateIDF](./src/main/scala/textanalyse/EntityResolution.scala#L62)
 - [x] [simpleSimimilarityCalculation](./src/main/scala/textanalyse/EntityResolution.scala#L103)
 - [x] [findSimilarity](./src/main/scala/textanalyse/EntityResolution.scala#L114)
-- [ ] simpleSimimilarityCalculationWithBroadcast
+- [x] [simpleSimimilarityCalculationWithBroadcast](./src/main/scala/textanalyse/EntityResolution.scala#L122)
 - [ ] evaluateModel
 
 ### Task B

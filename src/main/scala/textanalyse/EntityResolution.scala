@@ -120,8 +120,8 @@ class EntityResolution (sc:SparkContext, dat1:String, dat2:String, stopwordsFile
   }
   
  def simpleSimimilarityCalculationWithBroadcast:RDD[(String,String,Double)]={
-   
-    ???
+   val ama = amazonRDD; val goo = googleRDD; val idfDicBC= sc.broadcast(idfDict); val sWords = stopWords; val car = ama.cartesian(goo).distinct
+   car.map(EntityResolution.computeSimilarityWithBroadcast(_,idfDicBC,sWords))
   }
  
  /*
@@ -236,7 +236,7 @@ object EntityResolution{
       calculateTF_IDF(tokenize(doc2,sWords),idfDict)
     )
   }
-  
+//def computeSimilarity             (record:((String, String),(String, String)),idfDictionary:         Map[String,Double],  stopWords:Set[String]):(String, String,Double)={
   def computeSimilarityWithBroadcast(record:((String, String),(String, String)),idfBroadcast:Broadcast[Map[String,Double]], stopWords:Set[String]):(String, String,Double)={
     
     /*
@@ -245,6 +245,7 @@ object EntityResolution{
      * Sie die erforderlichen Parameter extrahieren
      * Verwenden Sie die Broadcast-Variable.
      */
-    ???
+    val bc = idfBroadcast.value; val sWords = stopWords
+    record match { case ((id1,text1),(id2,text2)) => (id1,id2,calculateDocumentSimilarity(text1,text2,bc,sWords)) }
   }
 }
