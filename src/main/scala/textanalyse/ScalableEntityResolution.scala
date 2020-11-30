@@ -232,12 +232,13 @@ class ScalableEntityResolution(sc:SparkContext, dat1:String, dat2:String, stopwo
 object ScalableEntityResolution{
   
     def calculateTF_IDFBroadcast(terms:List[String], idfDictBroadcast:Broadcast[Map[String,Double]]):Map[String,Double]={
-    
+  //def calculateTF_IDF(         terms:List[String], idfDictionary:             Map[String,Double] ):Map[String,Double]={
     /* 
      * Berechnung von TF-IDF Wert für eine Liste von Wörtern
      * Ergebnis ist eine Map die auf jedes Wort den zugehörigen TF-IDF-Wert mapped
-     */
-    ???    
+     */ //TF * IDF
+      val dict = idfDictBroadcast.value
+      EntityResolution.getTermFrequencies(terms).map { case (term:String,tf:Double) => (term, tf * dict(term)) }
   }
     
   def invert(termlist:(String, Map[String,Double])):List[(String,String)]={

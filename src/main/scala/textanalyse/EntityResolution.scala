@@ -142,7 +142,7 @@ class EntityResolution (sc:SparkContext, dat1:String, dat2:String, stopwordsFile
      * Ergebnis-Tripel:
      * (AnzDuplikate, avgCosinus-SimilaritätDuplikate,avgCosinus-SimilaritätNicht-Duplikate)
      */
-
+    // https://moodle.htw-berlin.de/pluginfile.php/978397/mod_resource/content/0/7_2_CosineSimilarity.pdf pp 13 choose a threshold and go from there
     ???
   }
 
