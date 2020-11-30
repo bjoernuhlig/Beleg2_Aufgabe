@@ -30,7 +30,14 @@ See Chapter 3 (pp. 73-103) of [Mining Massive Datasets](http://infolab.stanford.
 
 #### Entity Resolution
 Implement functions in: `src/main/scala/textanalyse/EntityResolution.scala`
+Implement TF-IDF: 
+```
+TFt,d is the number of occurrences of t in document d.
+DFt is the number of documents containing the term t.
+N is the total number of documents in the corpus.
 
+    Wt,d = TFt,d log (N/DFt)
+```
 - [x] [tokenize](./src/main/scala/textanalyse/EntityResolution.scala#L153) 
 - [x] [getTokens](./src/main/scala/textanalyse/EntityResolution.scala#L23) 
 - [x] [countTokens](./src/main/scala/textanalyse/EntityResolution.scala#L34) 
@@ -42,15 +49,6 @@ Implement functions in: `src/main/scala/textanalyse/EntityResolution.scala`
 - [x] [calculateCosinusSimilarity](./src/main/scala/textanalyse/EntityResolution.scala#L211)
 - [x] [calculateDocumentSimilarity](./src/main/scala/textanalyse/EntityResolution.scala#L228)
 - [ ] computeSimilarityWithBroadcast
-
-Implement TF-IDF 
-```
-TFt,d is the number of occurrences of t in document d.
-DFt is the number of documents containing the term t.
-N is the total number of documents in the corpus.
-
-    Wt,d = TFt,d log (N/DFt)
-```
 - [x] [getTermFrequencies](./src/main/scala/textanalyse/EntityResolution.scala#L165)
 - [x] [createCorpus](./src/main/scala/textanalyse/EntityResolution.scala#L52)
 - [x] [calculateIDF](./src/main/scala/textanalyse/EntityResolution.scala#L62)
