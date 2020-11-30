@@ -30,9 +30,9 @@ class EntityResolution (sc:SparkContext, dat1:String, dat2:String, stopwordsFile
     data.map({ case (key, productDescription ) => (key, EntityResolution.tokenize(productDescription,sw) )})
 
   }
-  
+
   def countTokens(data:RDD[(String,List[String])]):Long={
-    
+
     /*
      * Zählt alle Tokens innerhalb eines RDDs
      * Duplikate sollen dabei nicht eliminiert werden
@@ -59,7 +59,7 @@ class EntityResolution (sc:SparkContext, dat1:String, dat2:String, stopwordsFile
   }
   
   
-  def calculateIDF={ // takes about 4-5 minutes as cartesian is very expensive, as is distinct
+  def calculateIDF={ // takes about 3-5 minutes as cartesian is very expensive, as is distinct
     
     /*
      * Berechnung des IDF-Dictionaries auf Basis des erzeugten Korpus
@@ -101,22 +101,22 @@ class EntityResolution (sc:SparkContext, dat1:String, dat2:String, stopwordsFile
 
  
   def simpleSimimilarityCalculation:RDD[(String,String,Double)]={
-    
     /*
      * Berechnung der Document-Similarity für alle möglichen 
      * Produktkombinationen aus dem amazonRDD und dem googleRDD
      * Ergebnis ist ein RDD aus Tripeln bei dem an erster Stelle die AmazonID
      * steht, an zweiter die GoogleID und an dritter der Wert
      */
-    ???
+    val ama = amazonRDD; val goo = googleRDD; val idfDic= idfDict; val sWords = stopWords; val car = ama.cartesian(goo).distinct
+    car.map(EntityResolution.computeSimilarity(_,idfDic,sWords))
   }
   
-  def findSimilarity(vendorID1:String,vendorID2:String,sim:RDD[(String,String,Double)]):Double={
+  def findSimilarity(vendorID1:String,vendorID2:String,sim:RDD[(String,String,Double)]):Double={ // sim ist simpleSimimilarityCalculation,
     
     /*
      * Funktion zum Finden des Similarity-Werts für zwei ProduktIDs
      */
-    ???
+    sim.filter{ record => record match {case (id1,id2,_) => if (vendorID1==id1 && vendorID2==id2) true else false } }.distinct.collect.toList.lift(0).get._3
   }
   
  def simpleSimimilarityCalculationWithBroadcast:RDD[(String,String,Double)]={
@@ -173,13 +173,13 @@ object EntityResolution{
   }
    
   def computeSimilarity(record:((String, String),(String, String)), idfDictionary:Map[String,Double], stopWords:Set[String]):(String, String,Double)={
-    
     /*
      * Bererechnung der Document-Similarity einer Produkt-Kombination
      * Rufen Sie in dieser Funktion calculateDocumentSimilarity auf, in dem 
      * Sie die erforderlichen Parameter extrahieren
      */
-     ???  
+    val idfDict = idfDictionary; val sWords = stopWords
+    record match { case ((id1,text1),(id2,text2)) => (id1,id2,calculateDocumentSimilarity(text1,text2,idfDict,sWords)) }
   }
   
   def calculateTF_IDF(terms:List[String], idfDictionary:Map[String,Double]):Map[String,Double]={
