@@ -40,7 +40,7 @@ Implement functions in: `src/main/scala/textanalyse/EntityResolution.scala`
 - [x] [calculateDotProduct](./src/main/scala/textanalyse/EntityResolution.scala#L195)
 - [x] [calculateNorm](./src/main/scala/textanalyse/EntityResolution.scala#L203)
 - [x] [calculateCosinusSimilarity](./src/main/scala/textanalyse/EntityResolution.scala#L211)
-- [ ] calculateDocumentSimilarity
+- [x] [calculateDocumentSimilarity](./src/main/scala/textanalyse/EntityResolution.scala#L228)
 - [ ] computeSimilarityWithBroadcast
 
 Implement TF-IDF 
