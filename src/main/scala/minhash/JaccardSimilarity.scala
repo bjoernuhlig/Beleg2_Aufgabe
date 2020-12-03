@@ -76,7 +76,38 @@ object JaccardSimilarity {
    * rows: Each row corresponds to one hash function
    */
   
-  def minHash[T](matrix:Array[Array[T]],hFuns:Array[Int=>Int]):Array[Array[Int]]= ???  
+  def minHash[T](matrix:Array[Array[T]],hFuns:Array[Int=>Int]):Array[Array[Int]] = {
+
+    // create signature matrix filled with -1
+    val signatureMatrix:Array[Array[Int]] = Array.fill(hFuns.length)(Array.fill(matrix(0).size)(-1))
+
+    for { // iterate over matrix
+      i <- 0 until matrix.size
+      j <- 0 until matrix(i).size
+
+      if (matrix(i)(j) == 1) // if non zero element detected
+
+    } yield {
+
+      val hashedVals:Array[Int] = hFuns.map(_(i)) // calculate hashes
+
+      for (k <- 0 until hashedVals.size) {
+        val hash:Int = hashedVals(k)
+        if (signatureMatrix(k)(j) < 0) signatureMatrix(k)(j) = hash // any value if first
+        else if (signatureMatrix(k)(j) > hash) signatureMatrix(k)(j) = hash // min values else
+      }
+    }
+    signatureMatrix
+
+    /**
+     * The test fails reliable on two accounts: for the big set the fun calculateJaccardDistanceSet assert failed
+     * If you comment the assert (Line 74 ) in ./test/JaccardSimilarityTest.scala
+     * the test fails on a second account. the difference between two distances is to large
+     * TODO fix calculateJaccardDistanceSet
+     * Todo fix minhash
+     */
+
+  }
   
   /*++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
    * 

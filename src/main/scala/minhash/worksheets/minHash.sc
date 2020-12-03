@@ -114,14 +114,23 @@ matrix(4)(3)
 // iter über die rows der matrix, 0-5
 // steht eine 1 drin? hol die hashfuncs.
 
+
+var t = funs.map(_(0))
+
+
 for {
   i <- 0 until matrix.size
   j <- 0 until matrix(i).size
 
-  if matrix(i)(j) == 1
+  if (matrix(i)(j) == 1)
 
-} yield for {
+} yield {
 
-  k <- 0 until hashes(0).size
-  if sigMat(k)(j) > hashes(i)(k)
-} sigMat(k)(j) = hashes(i)(k)
+  val hashedVals = funs.map(_(i))
+  for (k <- 0 until hashedVals.size) {
+    val hash = hashedVals(k)
+    if (sigMat(k)(j) < 0) sigMat(k)(j) = hash
+    else if (sigMat(k)(j) > hash) sigMat(k)(j) = hash
+  }
+}
+sigMat
