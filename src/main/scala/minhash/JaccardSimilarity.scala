@@ -11,16 +11,26 @@ object JaccardSimilarity {
    * Calculate the Jaccard Distance of two Sets
    * 
    */
-  def calculateJaccardDistanceSet[T](set1:Set[T], set2:Set[T]):Double= ???
-  
+  def calculateJaccardDistanceSet[T](set1:Set[T], set2:Set[T]):Double = {
+    val intersect_size = ( set1 intersect set2 ) size
+    val j_index = intersect_size.toDouble / (set1.size + set2.size - intersect_size)
+    val j_distance = 1 - j_index
+    j_distance
+  }
   
    /*
  	 * 
    * Calculate the Jaccard Distance of two Bags
    * 
    */
+  def calculateJaccardDistanceBag[T](bag1:Iterable[T], bag2:Iterable[T]):Double = {
+    val numberOfSharedWords      =  ( bag1.toList   intersect  bag2.toList ).size.toDouble
+    val totalNumberOfUniqueWords =  ( bag1.toList     union    bag2.toList ).size.toDouble
 
-  def calculateJaccardDistanceBag[T](bag1:Iterable[T], bag2:Iterable[T]):Double= ???  
+    numberOfSharedWords / totalNumberOfUniqueWords
+  }
+
+
   /*
    * 
    * Calculates an Array of Hash Functions
@@ -34,8 +44,24 @@ object JaccardSimilarity {
    *    b is a random integer
    *    c is the parameter size, that is passed in the signature of the method
    */
-
-  def createHashFuntions(size:Integer, nrHashFuns: Int):Array[(Int=>Int)]= ???
+  def createHashFuntions(size:Integer, nrHashFuns: Int):Array[(Int=>Int)]= {
+    val rand = new scala.util.Random(size)
+    (
+      for {
+        i <- 0 until size
+        (m,b) = {
+          var x = rand.nextInt
+          var y = rand.nextInt
+          while ( x<2 || y<2 ) {
+            x = rand.nextInt
+            y = rand.nextInt
+          }
+          (x,y)
+        }
+      }
+        yield (x:Int) => (m*x+b)%size
+      ).toArray
+  }
 
   /*
    * Implement the MinHash algorithm presented in the lecture

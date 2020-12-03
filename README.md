@@ -24,11 +24,11 @@ def myFunc(s:String,param:Any) = { val mp = param; Utils.tokenize(s,mp) } // doe
 ```
  => not serializable
 
-### Task A: Create basic functions for textanalysis and entity resolution 
+### Task A: Create basic functions for text analysis (entity resolution) 
 See Chapter 3 (pp. 73-103) of [Mining Massive Datasets](http://infolab.stanford.edu/~ullman/mmds/book.pdf) for min hashing and local sensitivity hashing.
 
 
-#### Entity Resolution
+#### Entity Resolution ( Text Analysis )
 Implement functions in: `src/main/scala/textanalyse/EntityResolution.scala`
 Implement TF-IDF: 
 ```
@@ -60,6 +60,13 @@ N is the total number of documents in the corpus.
 ### Task B
 
 #### Min Hashing
+Implement functions in: `src/main/scala/minhash/JaccardSimilarity.scala`
+- [x] [calculateJaccardDistanceSet](./src/main/scala/minhash/JaccardSimilarity.scala#L14) 
+- [x] [calculateJaccardDistanceBag](./src/main/scala/minhash/JaccardSimilarity.scala#L26) 
+- [x] [createHashFuntions](./src/main/scala/minhash/JaccardSimilarity.scala#L47) 
+- [ ] [minHash](./src/main/scala/minhash/JaccardSimilarity.scala#L79)
 
 #### Local Sensitivity Hashing 
 
+#### Scalable Entity Resolution ( Text Analysis )
+Implement functions in: `src/main/scala/textanalyse/ScalableEntityResolution.scala`
