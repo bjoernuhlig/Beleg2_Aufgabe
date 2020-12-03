@@ -55,7 +55,7 @@ N is the total number of documents in the corpus.
 - [x] [simpleSimimilarityCalculation](./src/main/scala/textanalyse/EntityResolution.scala#L103)
 - [x] [findSimilarity](./src/main/scala/textanalyse/EntityResolution.scala#L114)
 - [x] [simpleSimimilarityCalculationWithBroadcast](./src/main/scala/textanalyse/EntityResolution.scala#L122)
-- [ ] evaluateModel
+- [ ] [evaluateModel](./src/main/scala/textanalyse/EntityResolution.scala#L132)
 
 ### Task B
 
@@ -70,3 +70,6 @@ Implement functions in: `src/main/scala/minhash/JaccardSimilarity.scala`
 
 #### Scalable Entity Resolution ( Text Analysis )
 Implement functions in: `src/main/scala/textanalyse/ScalableEntityResolution.scala`
+- [ ] [buildInverseIndex](./src/main/scala/textanalyse/ScalableEntityResolution.scala#L66)
+- [ ] [determineCommonTokens](./src/main/scala/textanalyse/ScalableEntityResolution.scala#L80)
+- [ ] [calculateSimilaritiesFullDataset](./src/main/scala/textanalyse/ScalableEntityResolution.scala#L90)
