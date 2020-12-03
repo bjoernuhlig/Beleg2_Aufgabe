@@ -59,7 +59,7 @@ object JaccardSimilarity {
           (x,y)
         }
       }
-        yield (x:Int) => (m*x+b)%size
+        yield (x:Int) => m*x+b%size
       ).toArray
   }
 
