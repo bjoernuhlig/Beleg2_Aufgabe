@@ -73,3 +73,4 @@ Implement functions in: `src/main/scala/textanalyse/ScalableEntityResolution.sca
 - [ ] [buildInverseIndex](./src/main/scala/textanalyse/ScalableEntityResolution.scala#L66)
 - [ ] [determineCommonTokens](./src/main/scala/textanalyse/ScalableEntityResolution.scala#L80)
 - [ ] [calculateSimilaritiesFullDataset](./src/main/scala/textanalyse/ScalableEntityResolution.scala#L90)
+- [ ] [fastCosinusSimilarity](./src/main/scala/textanalyse/ScalableEntityResolution.scala#L262)
