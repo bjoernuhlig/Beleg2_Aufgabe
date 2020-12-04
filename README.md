@@ -64,7 +64,7 @@ Implement functions in: `src/main/scala/minhash/JaccardSimilarity.scala`
 - [x] [calculateJaccardDistanceSet](./src/main/scala/minhash/JaccardSimilarity.scala#L14) 
 - [x] [calculateJaccardDistanceBag](./src/main/scala/minhash/JaccardSimilarity.scala#L26) 
 - [x] [createHashFuntions](./src/main/scala/minhash/JaccardSimilarity.scala#L47) 
-- [ ] [minHash](./src/main/scala/minhash/JaccardSimilarity.scala#L79)
+- [x] [minHash](./src/main/scala/minhash/JaccardSimilarity.scala#L103)
 
 #### Local Sensitivity Hashing 
 

@@ -1,7 +1,7 @@
 package test
 
-import org.scalatest.funsuite.AnyFunSuite
 import minhash._
+import org.scalatest.funsuite.AnyFunSuite
 
 class JaccardSimilarityTest  extends AnyFunSuite {
   

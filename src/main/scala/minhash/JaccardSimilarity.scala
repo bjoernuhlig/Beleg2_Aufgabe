@@ -14,14 +14,14 @@ object JaccardSimilarity {
   def calculateJaccardDistanceSet[T](set1:Set[T], set2:Set[T]):Double = {
     val intersect_size = ( set1 intersect set2 ) size
     val j_index = intersect_size.toDouble / (set1.size + set2.size - intersect_size)
-    val j_distance = 1 - j_index
-    j_distance
+//    val j_distance = 1 - j_index
+//    j_distance
+    j_index
   }
   
    /*
  	 * 
    * Calculate the Jaccard Distance of two Bags
-   * 
    */
   def calculateJaccardDistanceBag[T](bag1:Iterable[T], bag2:Iterable[T]):Double = {
     val numberOfSharedWords      =  ( bag1.toList   intersect  bag2.toList ).size.toDouble
@@ -45,22 +45,46 @@ object JaccardSimilarity {
    *    c is the parameter size, that is passed in the signature of the method
    */
   def createHashFuntions(size:Integer, nrHashFuns: Int):Array[(Int=>Int)]= {
-    val rand = new scala.util.Random(size)
-    (
-      for {
-        i <- 0 until size
-        (m,b) = {
-          var x = rand.nextInt
-          var y = rand.nextInt
-          while ( x<2 || y<2 ) {
-            x = rand.nextInt
-            y = rand.nextInt
-          }
-          (x,y)
+
+    val nextPrime = findNextPrim(size)
+
+    def getHashingCoefficents(): List[(Int, Int)] = {
+      val rand = new Random(size)
+      def loop(size: Int, rand: Random, acc: List[(Int, Int)]): List[(Int, Int)] = {
+        if (size > 0) {
+          loop(size - 1, rand, (rand.nextInt(nextPrime), rand.nextInt(findNextPrim(nextPrime))) :: acc)
+        } else {
+          acc
         }
       }
-        yield (x:Int) => (m*x+b)%size
-      ).toArray
+
+      loop(size, rand, List())
+    }
+
+
+    def hashList(): List[(Int => Int)] = {
+      getHashingCoefficents map ({ case (a, b) => ((x: Int) => (x * a + b) % nextPrime) })
+    }
+
+    hashList().toArray
+
+//    not good enough!
+//    val rand = new scala.util.Random(size)
+//    (
+//      for {
+//        i <- 0 until size
+//        (m,b) = {
+//          var x = rand.nextInt
+//          var y = rand.nextInt
+//          while ( x<2 || y<2 ) {
+//            x = rand.nextInt
+//            y = rand.nextInt
+//          }
+//          (x,y)
+//        }
+//      }
+//        yield (x:Int) => (m*x+b)%nextPrime
+//      ).toArray
   }
 
   /*

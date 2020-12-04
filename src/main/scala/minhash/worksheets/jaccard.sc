@@ -1,3 +1,5 @@
+import minhash.JaccardSimilarity
+
 val bag1=List("this","is", "a", "test","this","is", "a", "test","hello", "world")
 val bag2=List("this","is", "a", "test","this","is", "a", "test","cat","dog")
 
@@ -38,3 +40,17 @@ numberOfSharedWords
 numberOfSharedWords.size
 
 numberOfSharedWords.size.toDouble / totalNumberOfUniqueWords.size
+
+
+val s1 = bag1.toSet
+s1
+val s2 = bag2.toSet
+s2
+
+
+val us = s1.union(s2)
+val is = s1.intersect(s2)
+
+is.size.toDouble / us.size.toDouble
+
+JaccardSimilarity.calculateJaccardDistanceSet(s1,s1)
