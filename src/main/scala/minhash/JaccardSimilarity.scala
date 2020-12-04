@@ -123,13 +123,6 @@ object JaccardSimilarity {
     }
     signatureMatrix
 
-    /**
-     * The test fails reliable on two accounts: for the big set the fun calculateJaccardDistanceSet assert failed
-     * If you comment the assert (Line 74 ) in ./test/JaccardSimilarityTest.scala
-     * the test fails on a second account. the difference between two distances is to large
-     * TODO fix calculateJaccardDistanceSet
-     * Todo fix minhash
-     */
 
   }
   
