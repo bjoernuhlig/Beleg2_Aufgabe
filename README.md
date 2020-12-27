@@ -55,7 +55,7 @@ N is the total number of documents in the corpus.
 - [x] [simpleSimimilarityCalculation](./src/main/scala/textanalyse/EntityResolution.scala#L103)
 - [x] [findSimilarity](./src/main/scala/textanalyse/EntityResolution.scala#L114)
 - [x] [simpleSimimilarityCalculationWithBroadcast](./src/main/scala/textanalyse/EntityResolution.scala#L122)
-- [ ] [evaluateModel](./src/main/scala/textanalyse/EntityResolution.scala#L132)
+- [x] [evaluateModel](./src/main/scala/textanalyse/EntityResolution.scala#L132)
 
 ### Task B
 
