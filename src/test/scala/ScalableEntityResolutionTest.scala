@@ -1,11 +1,8 @@
-package test
+package scala
 
-import org.scalatest.funsuite.AnyFunSuite
+import org.apache.spark.{SparkConf, SparkContext}
 import org.scalatest.BeforeAndAfterAll
-import org.apache.spark.SparkConf
-import org.apache.spark.SparkContext
-import org.apache.spark.rdd.RDD
-
+import org.scalatest.funsuite.AnyFunSuite
 import textanalyse._
 
 class ScalableEntityResolutionTest extends AnyFunSuite with BeforeAndAfterAll{

@@ -1,4 +1,4 @@
-package test
+package scala
 
 import minhash._
 import org.scalatest.funsuite.AnyFunSuite
