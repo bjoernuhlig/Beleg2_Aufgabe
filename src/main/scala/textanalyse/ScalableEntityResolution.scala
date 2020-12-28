@@ -100,7 +100,6 @@ class ScalableEntityResolution(sc:SparkContext, dat1:String, dat2:String, stopwo
      * fastCosinusSimilarity im object
      * Speichern Sie das Ergebnis in der Variable simsFillValuesRDD und cachen sie diese.
      */
-    
     ???
   }
   
@@ -272,7 +271,6 @@ object ScalableEntityResolution{
     Verwenden Sie die Broadcast-Variablen und verwenden Sie für ein schnelles dot-Product nur die TF-IDF-Werte,
     die auch in der gemeinsamen Token-Liste sind 
     */
-    
     ???
   }
   

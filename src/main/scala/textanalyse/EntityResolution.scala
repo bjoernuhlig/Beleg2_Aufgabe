@@ -143,7 +143,15 @@ class EntityResolution (sc:SparkContext, dat1:String, dat2:String, stopwordsFile
      * (AnzDuplikate, avgCosinus-SimilaritätDuplikate,avgCosinus-SimilaritätNicht-Duplikate)
      */
     // https://moodle.htw-berlin.de/pluginfile.php/978397/mod_resource/content/0/7_2_CosineSimilarity.pdf pp 13 choose a threshold and go from there
-    ???
+
+    val sim = simpleSimimilarityCalculationWithBroadcast.map { case (g, a, simValue) => (g + " " + a, simValue) }
+    val duplicates = sim.join(goldStandard)
+    val nonDuplicates = sim.subtractByKey(duplicates)
+    (
+      duplicates.count,
+      duplicates.map(e => e._2._1).sum / duplicates.count,
+      nonDuplicates.map(e => e._2).sum / nonDuplicates.count
+    )
   }
 
 }
