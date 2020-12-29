@@ -12,8 +12,8 @@ class EntityResolution (sc:SparkContext, dat1:String, dat2:String, stopwordsFile
   val stopWords:Set[String]= Utils.getStopWords(stopwordsFile)
   val goldStandard:RDD[(String,String)]= Utils.getGoldStandard(goldStandardFile, sc)
 
-  var amazonTokens:RDD[(String, List[String])]= _
-  var googleTokens:RDD[(String, List[String])]= _
+  var amazonTokens:RDD[(String, List[String])]= getTokens(amazonRDD)
+  var googleTokens:RDD[(String, List[String])]= getTokens(googleRDD)
   var corpusRDD:RDD[(String, List[String])]= _
   var idfDict:Map[String, Double]= _
   
@@ -68,7 +68,7 @@ class EntityResolution (sc:SparkContext, dat1:String, dat2:String, stopwordsFile
     val CORPUS:Double = corpusRDD.count.toDouble
     
     val allTokens:RDD[String] = corpusRDD.values flatMap { case tokenList => tokenList.toSet } //distinct
-
+    allTokens.cache()
     //val allDocuments:RDD[List[String]] = corpusRDD.map(_._2)
 
     // very expensive cartesian join with distinct takes ~3-5 minutes
