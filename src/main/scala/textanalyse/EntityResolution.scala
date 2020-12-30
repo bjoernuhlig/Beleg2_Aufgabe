@@ -69,36 +69,7 @@ class EntityResolution (sc:SparkContext, dat1:String, dat2:String, stopwordsFile
     
     val allTokens:RDD[String] = corpusRDD.values flatMap { case tokenList => tokenList.toSet } //distinct
     allTokens.cache()
-    //val allDocuments:RDD[List[String]] = corpusRDD.map(_._2)
 
-    // very expensive cartesian join with distinct takes ~3-5 minutes
-//    idfDict = allTokens.cartesian(allDocuments).
-//      distinct.
-//      filter { case (word,list) => list.contains(word) }.
-//      groupBy(_._1).
-//      map(e => (e._1,CORPUS/e._2.size.toDouble)).
-//      collect.
-//      toMap
-
-    // Using broadcast to join with distinct takes ~1.30 minutes
-//    val bc = sc.broadcast(allTokens.collect)
-//
-//    val joined = allDocuments.mapPartitions({ iter =>
-//      val y = bc.value
-//      for {
-//        (x) <- iter
-//      } yield (x, y)
-//    }, preservesPartitioning = true)
-//
-//    val grouped = joined.flatMap(x => x._2.map(y => (y,x._1))).distinct
-//
-//    idfDict = grouped.filter { case (word,list) => list.contains(word) }.
-//      groupBy(_._1).
-//      map( e => (e._1,CORPUS/e._2.size.toDouble) ).
-//      collect.
-//      toMap
-
-    // try to better performance
     val idfRDD = allTokens groupBy identity map { case (word, list) => (word, CORPUS / list.size.toDouble) }
     idfDict = idfRDD.collectAsMap().toMap
 

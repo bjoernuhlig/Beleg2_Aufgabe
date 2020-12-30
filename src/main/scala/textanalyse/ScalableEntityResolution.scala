@@ -74,7 +74,8 @@ class ScalableEntityResolution(sc:SparkContext, dat1:String, dat2:String, stopwo
      * Ergebnisse in amazonInvPairsRDD und googleInvPairsRDD. Cachen Sie die 
      * die Werte.
      */
-    ???
+    amazonInvPairsRDD = amazonWeightsRDD.flatMap(x => ScalableEntityResolution.invert(x)).cache
+    googleInvPairsRDD = googleWeightsRDD.flatMap(x => ScalableEntityResolution.invert(x)).cache
   }
   
   def determineCommonTokens:Unit={
