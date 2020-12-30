@@ -108,8 +108,14 @@ class ScalableEntityResolution(sc:SparkContext, dat1:String, dat2:String, stopwo
      * Speichern Sie das Ergebnis in der Variable simsFillValuesRDD und cachen sie diese.
      */
 
-    idfsFullBroadcast
-    ???
+    val awb = amazonWeightsBroadcast
+    val gwb = googleWeightsBroadcast
+    val anb = amazonNormsBroadcast
+    val gnb = googleNormsBroadcast
+
+
+    similaritiesFullRDD = commonTokens.map(x => ScalableEntityResolution.fastCosinusSimilarity(x,awb,gwb,anb,gnb)).cache()
+    simsFullValuesRDD = similaritiesFullRDD.map(x => x._2).cache()
   }
   
   /*
@@ -280,8 +286,12 @@ object ScalableEntityResolution{
     Verwenden Sie die Broadcast-Variablen und verwenden Sie für ein schnelles dot-Product nur die TF-IDF-Werte,
     die auch in der gemeinsamen Token-Liste sind 
     */
-    ???
-  }
+
+      val cosineValue = EntityResolution.calculateDotProduct(amazonWeightsBroad.value.getOrElse(record._1._1,Map.empty),googleWeightsBroad.value.getOrElse(record._1._2,Map.empty))/(amazonNormsBroad.value.getOrElse(record._1._1,0.0)*googleNormsBroad.value.getOrElse(record._1._2,0.0))
+
+      (record._1,cosineValue)
+
+    }
   
   def gs_value(record:(_,(_,Option[Double]))):Double={
 
