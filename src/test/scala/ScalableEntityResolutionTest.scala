@@ -82,19 +82,19 @@ class ScalableEntityResolutionTest extends AnyFunSuite with BeforeAndAfterAll{
     assert(entityResolutionScalable.similaritiesFullRDD.count=== 2441100, "incorrect similaritiesFullRDD.count()")
   }
   
-//  test("Analyse Dataset"){
-//
-//    entityResolutionScalable.analyseDataset
-//    assert(entityResolutionScalable.trueDupSimsRDD.count===1300)
-//
-//    val similarityTest = entityResolutionScalable.similaritiesFullRDD.filter(x=> ((x._1._1.equals( "b00005lzly")) &&
-//          (x._1._2.equals( "http://www.google.com/base/feeds/snippets/13823221823254120257")))).collect()
-//      assert(similarityTest.size=== 1)
-//
-//    /*
-//     * *************************************************************
-//     */
-//  }
+  test("Analyse Dataset"){
+
+    entityResolutionScalable.analyseDataset
+    assert(entityResolutionScalable.trueDupSimsRDD.count===1300)
+
+    val similarityTest = entityResolutionScalable.similaritiesFullRDD.filter(x=> ((x._1._1.equals( "b00005lzly")) &&
+          (x._1._2.equals( "http://www.google.com/base/feeds/snippets/13823221823254120257")))).collect()
+      assert(similarityTest.size=== 1)
+
+    /*
+     * *************************************************************
+     */
+  }
   
   test("Test Analysis"){
     

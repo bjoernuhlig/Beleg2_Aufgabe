@@ -195,7 +195,7 @@ class ScalableEntityResolution(sc:SparkContext, dat1:String, dat2:String, stopwo
     frame.pack();
     frame.setVisible(true);
     println("Please press enter....")
-    System.in.read()
+    frame.removeAll()
   }
 
   
