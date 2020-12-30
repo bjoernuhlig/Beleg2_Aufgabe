@@ -85,7 +85,13 @@ class ScalableEntityResolution(sc:SparkContext, dat1:String, dat2:String, stopwo
      * Speichern Sie das Ergebnis in die Variable commonTokens und verwenden Sie
      * dazu die Funktion swap aus dem object.
      */
-    ???
+
+    //32s
+    commonTokens = amazonInvPairsRDD.join(googleInvPairsRDD).map(x => ScalableEntityResolution.swap(x)).groupByKey()
+
+    //try reduceByKey to see if perfomance boost
+    //commonTokens = amazonInvPairsRDD.join(googleInvPairsRDD).map(x => ScalableEntityResolution.swap(x)).reduceByKey(_++_)
+
   }
   
   def calculateSimilaritiesFullDataset:Unit={
@@ -101,6 +107,8 @@ class ScalableEntityResolution(sc:SparkContext, dat1:String, dat2:String, stopwo
      * fastCosinusSimilarity im object
      * Speichern Sie das Ergebnis in der Variable simsFillValuesRDD und cachen sie diese.
      */
+
+    idfsFullBroadcast
     ???
   }
   
