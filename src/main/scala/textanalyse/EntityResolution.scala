@@ -38,9 +38,9 @@ class EntityResolution (sc:SparkContext, dat1:String, dat2:String, stopwordsFile
      * Duplikate sollen dabei nicht eliminiert werden
      */
 
-    //data.map{ case (key,tokenlist) => (key, tokenlist.length) }.fold("",0)((acc,head)=>{ ("", acc._2 + head._2) })._2
+//    data.map{ case (key,tokenlist) => (key, tokenlist.length) }.fold("",0)((acc,head)=>{ ("", acc._2 + head._2) })._2
 
-    //Shorter:
+    //  Shorter:
     data.map(x => (x._2.size)).sum.toLong
   }
   
@@ -76,34 +76,51 @@ class EntityResolution (sc:SparkContext, dat1:String, dat2:String, stopwordsFile
     val allTokens:RDD[String] = corpusRDD.values flatMap { case tokenList => tokenList.toSet } //distinct
     allTokens.cache()
 
-    val idfRDD = allTokens groupBy identity map { case (word, list) => (word, CORPUS / list.size.toDouble) }
-    idfDict = idfRDD.collectAsMap().toMap
+    val idfRDD = allTokens groupBy identity map {
+      case (word, list) => (word, CORPUS / list.size.toDouble)
+    }
+    idfDict = idfRDD.collectAsMap.toMap
 
   }
 
  
-  def simpleSimimilarityCalculation:RDD[(String,String,Double)]={
+  def simpleSimilarityCalculation:RDD[(String,String,Double)]={
     /*
      * Berechnung der Document-Similarity für alle möglichen 
      * Produktkombinationen aus dem amazonRDD und dem googleRDD
      * Ergebnis ist ein RDD aus Tripeln bei dem an erster Stelle die AmazonID
      * steht, an zweiter die GoogleID und an dritter der Wert
      */
-    val ama = amazonRDD; val goo = googleRDD; val idfDic= idfDict; val sWords = stopWords; val car = ama.cartesian(goo).distinct
+    val ama = amazonRDD;
+    val goo = googleRDD;
+    val idfDic= idfDict;
+    val sWords = stopWords;
+    val car = ama.cartesian(goo).distinct
+
     car.map(EntityResolution.computeSimilarity(_,idfDic,sWords))
   }
   
-  def findSimilarity(vendorID1:String,vendorID2:String,sim:RDD[(String,String,Double)]):Double={ // sim ist simpleSimimilarityCalculation,
+  def findSimilarity(vendorID1:String,vendorID2:String,sim:RDD[(String,String,Double)]):Double={ // sim is simpleSimilarityCalculation,
     
     /*
      * Funktion zum Finden des Similarity-Werts für zwei ProduktIDs
      */
-    sim.filter{ record => record match {case (id1,id2,_) => if (vendorID1==id1 && vendorID2==id2) true else false } }.distinct.collect.toList.lift(0).get._3
+    sim.filter {
+      record => record match {
+        case (id1,id2,_) => if (vendorID1==id1 && vendorID2==id2) true else false
+      }
+    }.distinct.collect.toList.lift(0).get._3
   }
   
- def simpleSimimilarityCalculationWithBroadcast:RDD[(String,String,Double)]={
-   val ama = amazonRDD; val goo = googleRDD; val idfDicBC= sc.broadcast(idfDict); val sWords = stopWords; val car = ama.cartesian(goo).distinct
+ def simpleSimilarityCalculationWithBroadcast:RDD[(String,String,Double)]={
+   val ama = amazonRDD;
+   val goo = googleRDD;
+   val idfDicBC = sc.broadcast(idfDict);
+   val sWords = stopWords;
+   val car = ama.cartesian(goo).distinct
+
    car.map(EntityResolution.computeSimilarityWithBroadcast(_,idfDicBC,sWords))
+
   }
  
  /*
@@ -124,15 +141,17 @@ class EntityResolution (sc:SparkContext, dat1:String, dat2:String, stopwordsFile
      * Ergebnis-Tripel:
      * (AnzDuplikate, avgCosinus-SimilaritätDuplikate,avgCosinus-SimilaritätNicht-Duplikate)
      */
-    // https://moodle.htw-berlin.de/pluginfile.php/978397/mod_resource/content/0/7_2_CosineSimilarity.pdf pp 13 choose a threshold and go from there
 
-    val sim = simpleSimimilarityCalculationWithBroadcast.map { case (g, a, simValue) => (g + " " + a, simValue) }
-    val duplicates = sim.join(goldStandard)
-    val nonDuplicates = sim.subtractByKey(duplicates)
+    val sim = simpleSimilarityCalculationWithBroadcast.map {
+      case (google, amazon, similarityValue) => (google + " " + amazon, similarityValue)
+    }
+    val AnzDuplikate = sim.join(goldStandard)
+    val AnzNonDuplikate = sim.subtractByKey(AnzDuplikate)
+
     (
-      duplicates.count,
-      duplicates.map(e => e._2._1).sum / duplicates.count,
-      nonDuplicates.map(e => e._2).sum / nonDuplicates.count
+      AnzDuplikate.count,
+      AnzDuplikate.map(e => e._2._1).sum / AnzDuplikate.count,
+      AnzNonDuplikate.map(e => e._2).sum / AnzNonDuplikate.count
     )
   }
 
@@ -147,9 +166,9 @@ object EntityResolution{
    	* Verwenden Sie zum Aufsplitten die Methode Utils.tokenizeString
    	*/
 
-    Utils.tokenizeString(s) // list.diff(list) removes only the first occurrence of an object. filterNot with Set removes all elements of the Set from the list
+    Utils
+      .tokenizeString(s) // list.diff(list) removes only the first occurrence of an object. filterNot with Set removes all elements of the Set from the list
       .filterNot(stopws)
-
    }
 
   def getTermFrequencies(tokens:List[String]):Map[String,Double]={
@@ -159,7 +178,9 @@ object EntityResolution{
      * Menge aller Wörter innerhalb eines Dokuments 
      */
     
-    tokens.groupBy(identity).map { case (word, frequency) => (word,frequency.length.toDouble / tokens.length.toDouble) }
+    tokens groupBy identity map {
+      case (word, frequency) => (word,frequency.length / tokens.length.toDouble)
+    }
   }
    
   def computeSimilarity(record:((String, String),(String, String)), idfDictionary:Map[String,Double], stopWords:Set[String]):(String, String,Double)={
@@ -168,8 +189,14 @@ object EntityResolution{
      * Rufen Sie in dieser Funktion calculateDocumentSimilarity auf, in dem 
      * Sie die erforderlichen Parameter extrahieren
      */
-    val idfDict = idfDictionary; val sWords = stopWords
-    record match { case ((id1,text1),(id2,text2)) => (id1,id2,calculateDocumentSimilarity(text1,text2,idfDict,sWords)) }
+    val idfDict = idfDictionary
+    val sWords = stopWords
+
+    record match {
+      case ((id1,text1),(id2,text2)) => (
+        id1, id2, calculateDocumentSimilarity(text1,text2,idfDict,sWords)
+      )
+    }
   }
   
   def calculateTF_IDF(terms:List[String], idfDictionary:Map[String,Double]):Map[String,Double]={
@@ -179,7 +206,10 @@ object EntityResolution{
      * Ergebnis ist eine Mapm die auf jedes Wort den zugehörigen TF-IDF-Wert mapped
      */ //TF * IDF
     val dict = idfDictionary
-    getTermFrequencies(terms).map { case (term:String,tf:Double) => (term, tf * dict(term)) }
+
+    getTermFrequencies(terms) map {
+      case (term:String,tf:Double) => (term, tf * dict(term))
+    }
   }
   
   def calculateDotProduct(v1:Map[String,Double], v2:Map[String,Double]):Double={
@@ -187,7 +217,10 @@ object EntityResolution{
     /*
      * Berechnung des Dot-Products von zwei Vectoren - use keyset to remove sparse elements without corresponding keys
      */
-    v1.filterKeys(v2.keySet).view zip v2.filterKeys(v1.keySet) map {case ((_,u),(_,v)) => u*v} sum
+    // if zip doesnt work use _.view.zip ... but loose performance
+    v1.filterKeys(v2.keySet) zip v2.filterKeys(v1.keySet) map {
+      case ((_,u),(_,v)) => u*v
+    } sum
   }
 
   def calculateNorm(vec:Map[String,Double]):Double={
@@ -200,17 +233,38 @@ object EntityResolution{
   
   def calculateCosinusSimilarity(doc1:Map[String,Double], doc2:Map[String,Double]):Double={
 
-    /* 
-     * Berechnung der Cosinus-Similarity für zwei Vectoren
+    /* Berechnung der Cosinus-Similarity für zwei Vectoren
+     *
+     * Required:
+     * 2 Vectors (Maps) with identical sorted keys
+     *
+     * Given:
+     * 2 Vectors (Maps, doc1 and doc2) with different unsorted keysets
+     *
+     * Solution:
+     * Create a corpus from all given documents
+
+        ( doc1.keys ++ doc2.keys ).toList
+
+     * Get all terms from out of the corpus which are missing in the doc and assign them to the doc.
+
+        doc1.toSeq ++ corpus.diff(doc1.keys.toList).
+
+     * These terms do not appear and thus have a frequency of 0.0
+
+        map( s => (s, 0.0) )
+
+     * convert to Array and throw into a SortedMap or TreeMap which are always sorted by Key
+
+        toArray:_*
+
+     * use special type ascription _* to pass the array directly to the map constructor
      */
+
     val corpus = ( doc1.keys ++ doc2.keys ).toList
-
-    // We need a sorted (doc) map the size of the corpus which contains zeros for words missing from the corpus
     import scala.collection.immutable.SortedMap
-
-    // Find missing words from corpus / fill with zeros / convert to Array to throw into a SortedMap or TreeMap
-    val n1:Map[String,Double] = SortedMap( (doc1.toSeq ++ corpus.diff(doc1.keys.toList)  .map( s => (s,0.0)))  .toArray:_* )
-    val n2:Map[String,Double] = SortedMap( (doc2.toSeq ++ corpus.diff(doc2.keys.toList)  .map( s => (s,0.0)))  .toArray:_* )
+    val n1:Map[String,Double] = SortedMap(( doc1.toSeq ++ corpus.diff(doc1.keys.toList).map( s => (s, 0.0)) ).toArray:_*)
+    val n2:Map[String,Double] = SortedMap(( doc2.toSeq ++ corpus.diff(doc2.keys.toList).map( s => (s, 0.0)) ).toArray:_*)
 
     calculateDotProduct(n1,n2) / ( calculateNorm(n1) * calculateNorm(n2) )
   }
@@ -221,6 +275,7 @@ object EntityResolution{
      * Berechnung der Document-Similarity für ein Dokument
      */
     val idfDict = idfDictionary; val sWords = stopWords
+
     calculateCosinusSimilarity(
       calculateTF_IDF(tokenize(doc1,sWords),idfDict),
       calculateTF_IDF(tokenize(doc2,sWords),idfDict)
@@ -234,7 +289,11 @@ object EntityResolution{
      * Sie die erforderlichen Parameter extrahieren
      * Verwenden Sie die Broadcast-Variable.
      */
-    val bc = idfBroadcast.value; val sWords = stopWords
-    record match { case ((id1,text1),(id2,text2)) => (id1,id2,calculateDocumentSimilarity(text1,text2,bc,sWords)) }
+    val bc = idfBroadcast.value
+    val sWords = stopWords
+
+    record match {
+      case ((id1,text1),(id2,text2)) => (id1,id2,calculateDocumentSimilarity(text1,text2,bc,sWords))
+    }
   }
 }

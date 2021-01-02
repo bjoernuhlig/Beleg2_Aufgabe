@@ -86,10 +86,18 @@ class ScalableEntityResolution(sc:SparkContext, dat1:String, dat2:String, stopwo
      * dazu die Funktion swap aus dem object.
      */
 
-    //32s
-    commonTokens = amazonInvPairsRDD.join(googleInvPairsRDD).map(x => ScalableEntityResolution.swap(x)).groupByKey()
+    commonTokens = amazonInvPairsRDD.
+      join(googleInvPairsRDD).
+      map(x =>
+        ScalableEntityResolution.swap(x)).
+      groupByKey()
 
-    //try reduceByKey to see if perfomance boost
+    /*
+     * reduceByKey is faster for aggregate steps d/t more efficient shuffle phase
+     * but is harder to implement for creating iterables.
+     * groupByKey creates iterables
+     * reduceByKey better for aggregate (sum, max, min, etc.)
+     */
     //commonTokens = amazonInvPairsRDD.join(googleInvPairsRDD).map(x => ScalableEntityResolution.swap(x)).reduceByKey(_++_)
 
   }
@@ -112,7 +120,6 @@ class ScalableEntityResolution(sc:SparkContext, dat1:String, dat2:String, stopwo
     val gwb = googleWeightsBroadcast
     val anb = amazonNormsBroadcast
     val gnb = googleNormsBroadcast
-
 
     similaritiesFullRDD = commonTokens.map(x => ScalableEntityResolution.fastCosinusSimilarity(x,awb,gwb,anb,gnb)).cache()
     simsFullValuesRDD = similaritiesFullRDD.map(x => x._2).cache()
@@ -272,9 +279,13 @@ object ScalableEntityResolution{
     (el._2,el._1)
   }
   
-    def fastCosinusSimilarity(record:((String,String),Iterable[String]), 
-        amazonWeightsBroad:Broadcast[Map[String, Map[String,Double]]],googleWeightsBroad:Broadcast[Map[String, Map[String,Double]]],
-        amazonNormsBroad:Broadcast[Map[String,Double]], googleNormsBroad:Broadcast[Map[String,Double]]):((String, String), Double)={
+    def fastCosinusSimilarity(
+                               record:((String,String),Iterable[String]),
+                               amazonWeightsBroad:Broadcast[Map[String, Map[String,Double]]],
+                               googleWeightsBroad:Broadcast[Map[String, Map[String,Double]]],
+                               amazonNormsBroad:Broadcast[Map[String,Double]],
+                               googleNormsBroad:Broadcast[Map[String,Double]]):
+    ((String, String), Double) = {
     
     /* Compute Cosine Similarity using Broadcast variables
     Args:
@@ -286,7 +297,11 @@ object ScalableEntityResolution{
     die auch in der gemeinsamen Token-Liste sind 
     */
 
-      val cosineValue = EntityResolution.calculateDotProduct(amazonWeightsBroad.value.getOrElse(record._1._1,Map.empty),googleWeightsBroad.value.getOrElse(record._1._2,Map.empty))/(amazonNormsBroad.value.getOrElse(record._1._1,0.0)*googleNormsBroad.value.getOrElse(record._1._2,0.0))
+      val cosineValue = EntityResolution.calculateDotProduct(
+        amazonWeightsBroad.value.getOrElse(record._1._1,Map.empty),
+        googleWeightsBroad.value.getOrElse(record._1._2,Map.empty)
+      ) / (
+        amazonNormsBroad.value.getOrElse(record._1._1,0.0) * googleNormsBroad.value.getOrElse(record._1._2,0.0))
 
       (record._1,cosineValue)
 
