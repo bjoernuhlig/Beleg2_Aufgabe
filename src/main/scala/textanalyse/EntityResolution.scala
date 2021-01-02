@@ -38,7 +38,10 @@ class EntityResolution (sc:SparkContext, dat1:String, dat2:String, stopwordsFile
      * Duplikate sollen dabei nicht eliminiert werden
      */
 
-    data.map{ case (key,tokenlist) => (key, tokenlist.length) }.fold("",0)((acc,head)=>{ ("", acc._2 + head._2) })._2
+    //data.map{ case (key,tokenlist) => (key, tokenlist.length) }.fold("",0)((acc,head)=>{ ("", acc._2 + head._2) })._2
+
+    //Shorter:
+    data.map(x => (x._2.size)).sum.toLong
   }
   
   def findBiggestRecord(data:RDD[(String,List[String])]):(String,List[String])={
@@ -46,7 +49,10 @@ class EntityResolution (sc:SparkContext, dat1:String, dat2:String, stopwordsFile
     /*
      * Findet den Datensatz mit den meisten Tokens
      */
-    data map { case (key:String,tokenList:List[String]) => (key,tokenList) } reduce ((acc,head) => { if (acc._2.length >= head._2.length) acc else head } )
+    //data map { case (key:String,tokenList:List[String]) => (key,tokenList) } reduce ((acc,head) => { if (acc._2.length >= head._2.length) acc else head } )
+
+    //Shorter:
+    data.sortBy(x => -x._2.size).take(1)(0)
   }
 
   def createCorpus={
@@ -55,7 +61,7 @@ class EntityResolution (sc:SparkContext, dat1:String, dat2:String, stopwordsFile
      * (amazonRDD und googleRDD), vereinigt diese und speichert das
      * Ergebnis in corpusRDD
      */
-    corpusRDD = getTokens(googleRDD) ++ getTokens(amazonRDD);
+    corpusRDD = getTokens(googleRDD) ++ getTokens(amazonRDD)
   }
   
   
@@ -220,7 +226,6 @@ object EntityResolution{
       calculateTF_IDF(tokenize(doc2,sWords),idfDict)
     )
   }
-//def computeSimilarity             (record:((String, String),(String, String)),idfDictionary:         Map[String,Double],  stopWords:Set[String]):(String, String,Double)={
   def computeSimilarityWithBroadcast(record:((String, String),(String, String)),idfBroadcast:Broadcast[Map[String,Double]], stopWords:Set[String]):(String, String,Double)={
     
     /*
